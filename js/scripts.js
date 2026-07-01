@@ -9,6 +9,15 @@
 
 window.addEventListener('DOMContentLoaded', event => {
 
+    // --- Stabilisasi mobile: fix "100vh" agar tidak loncat saat address bar
+    // browser mobile muncul/hilang. Sets --vh yang bisa dipakai CSS bila perlu.
+    const setViewportHeightVar = () => {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    };
+    setViewportHeightVar();
+    window.addEventListener('resize', setViewportHeightVar, { passive: true });
+    window.addEventListener('orientationchange', setViewportHeightVar, { passive: true });
+
     // Navbar shrink function
     var navbarShrink = function () {
         const navbarCollapsible = document.body.querySelector('#mainNav');
@@ -26,8 +35,19 @@ window.addEventListener('DOMContentLoaded', event => {
     // Shrink the navbar 
     navbarShrink();
 
-    // Shrink the navbar when page is scrolled
-    document.addEventListener('scroll', navbarShrink);
+    // Shrink the navbar when page is scrolled.
+    // requestAnimationFrame throttling supaya scroll tetap mulus di HP
+    // (mencegah efek blur navbar dipicu berkali-kali per frame).
+    let navbarTicking = false;
+    document.addEventListener('scroll', () => {
+        if (!navbarTicking) {
+            window.requestAnimationFrame(() => {
+                navbarShrink();
+                navbarTicking = false;
+            });
+            navbarTicking = true;
+        }
+    }, { passive: true });
 
     // Activate Bootstrap scrollspy on the main nav element
     const mainNav = document.body.querySelector('#mainNav');

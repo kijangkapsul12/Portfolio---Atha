@@ -1,0 +1,333 @@
+/* =========================================================
+   MODERN GLASS THEME — overlay di atas styles.css (Freelancer)
+   Efek: glassmorphism, blur, gradient mesh, transisi halus
+   Ditulis agar aman & stabil di perangkat mobile.
+   ========================================================= */
+
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.10);
+  --glass-bg-strong: rgba(255, 255, 255, 0.16);
+  --glass-border: rgba(255, 255, 255, 0.28);
+  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.25);
+  --accent: #4274D9;
+  --accent-2: #7c5cff;
+  --dark-navy: #10163a;
+  --dark-navy-2: #1b2358;
+  --blur-lg: 22px;
+  --blur-md: 14px;
+  --blur-sm: 8px;
+}
+
+/* ---------------------------------------------------------
+   0. Reset dasar & stabilisasi mobile
+   - dukung 100dvh (dynamic viewport height) supaya address bar
+     browser mobile tidak bikin layout "loncat"
+   - overflow-x hidden supaya blob dekorasi tidak memicu scroll
+     horizontal di layar kecil
+   --------------------------------------------------------- */
+html, body {
+  overflow-x: hidden;
+}
+
+body {
+  background: #10163a;
+}
+
+/* Matikan animasi/efek berat untuk pengguna yang minta reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------------------------------------------------------
+   1. Latar belakang gradient-mesh global (dekorasi blur)
+   Dipasang fixed di belakang seluruh halaman.
+   Ukuran & blur dikecilkan otomatis di mobile (lihat media query)
+   agar tidak berat dan tidak memicu jank saat scroll.
+   --------------------------------------------------------- */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-orbs span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  will-change: transform;
+}
+
+.bg-orbs span:nth-child(1) {
+  width: 420px;
+  height: 420px;
+  top: -120px;
+  left: -100px;
+  background: radial-gradient(circle at 30% 30%, var(--accent), transparent 70%);
+}
+
+.bg-orbs span:nth-child(2) {
+  width: 380px;
+  height: 380px;
+  top: 20%;
+  right: -140px;
+  background: radial-gradient(circle at 60% 40%, var(--accent-2), transparent 70%);
+}
+
+.bg-orbs span:nth-child(3) {
+  width: 340px;
+  height: 340px;
+  bottom: -100px;
+  left: 30%;
+  background: radial-gradient(circle at 50% 50%, #38bdf8, transparent 70%);
+  opacity: 0.35;
+}
+
+@media (max-width: 767.98px) {
+  .bg-orbs span {
+    filter: blur(50px);
+    opacity: 0.4;
+  }
+  .bg-orbs span:nth-child(1) { width: 260px; height: 260px; }
+  .bg-orbs span:nth-child(2) { width: 240px; height: 240px; }
+  .bg-orbs span:nth-child(3) { width: 220px; height: 220px; }
+}
+
+/* ---------------------------------------------------------
+   1b. Fix kontras teks — karena body sekarang gelap, class
+   Bootstrap .text-secondary (navy #2c3e50) jadi nyaris tak
+   terlihat. Judul section & judul portfolio dibuat terang.
+   --------------------------------------------------------- */
+.page-section-heading,
+.portfolio-item-title {
+  color: #f4f6fb !important;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+.divider-custom .divider-custom-line {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.divider-custom:not(.divider-light) .divider-custom-icon {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Card About sudah punya bg gelap sendiri + heading putih, jadi
+   dikembalikan seperti semula agar tidak konflik dengan aturan di atas */
+.about-card .page-section-heading {
+  color: #ffffff !important;
+  text-shadow: none;
+}
+
+/* ---------------------------------------------------------
+   2. Navbar — kaca melayang (glass floating pill)
+   --------------------------------------------------------- */
+#mainNav {
+  background-color: rgba(16, 22, 58, 0.35) !important;
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  backdrop-filter: blur(var(--blur-md));
+  border-bottom: none;
+
+  /* Floating pill sejak awal (sebelum discroll), bukan hanya saat scroll */
+  width: 96%;
+  max-width: 1200px;
+  top: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+#mainNav.navbar-shrink {
+  background-color: rgba(16, 22, 58, 0.55) !important;
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(140%);
+  backdrop-filter: blur(var(--blur-lg)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Fallback aman: jika backdrop-filter tidak didukung, pakai warna solid */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  #mainNav { background-color: rgba(16, 22, 58, 0.9) !important; }
+  #mainNav.navbar-shrink { background-color: #1b2358 !important; }
+}
+
+#mainNav .navbar-nav li.nav-item a.nav-link {
+  border-radius: 999px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+#mainNav .navbar-nav li.nav-item a.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.10);
+}
+
+#mainNav .navbar-toggler {
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  backdrop-filter: blur(var(--blur-sm));
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Menu mobile (collapsed) — kaca juga, dan dipastikan tidak transparan
+   berlebihan supaya teks tetap terbaca stabil di semua layar */
+@media (max-width: 991.98px) {
+  #mainNav .navbar-collapse {
+    background-color: rgba(16, 22, 58, 0.75) !important;
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    backdrop-filter: blur(var(--blur-md));
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+  }
+  #mainNav.navbar-shrink .navbar-collapse {
+    background-color: transparent !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: none;
+  }
+}
+
+/* ---------------------------------------------------------
+   3. Masthead / Hero — gradient modern + avatar kaca
+   --------------------------------------------------------- */
+.masthead {
+  background: linear-gradient(160deg, var(--dark-navy) 0%, var(--dark-navy-2) 55%, #26307a 100%) !important;
+  position: relative;
+  min-height: 100dvh;
+  min-height: 100vh; /* fallback untuk browser lama */
+  display: flex;
+  align-items: center;
+}
+
+.masthead .masthead-avatar {
+  padding: 6px;
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  backdrop-filter: blur(var(--blur-sm));
+  border: 2px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Lingkaran kaca di belakang ikon divider (roket) dihapus atas permintaan —
+   ikon dibiarkan polos seperti desain asli */
+
+/* ---------------------------------------------------------
+   4. Portfolio — kartu kaca dengan hover blur lembut
+   --------------------------------------------------------- */
+.portfolio .portfolio-item {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Transform hover hanya untuk perangkat yang benar-benar punya mouse,
+   supaya tidak "nyangkut" aktif di layar sentuh (stabilisasi mobile) */
+@media (hover: hover) and (pointer: fine) {
+  .portfolio .portfolio-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+  }
+}
+
+.portfolio .portfolio-item .portfolio-item-caption {
+  background: rgba(16, 22, 58, 0.55);
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  backdrop-filter: blur(var(--blur-md));
+}
+
+/* ---------------------------------------------------------
+   5. About card — kaca gelap dengan blur, foto tetap tajam
+   --------------------------------------------------------- */
+.about-card {
+  background: rgba(27, 35, 88, 0.55) !important;
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(150%);
+  backdrop-filter: blur(var(--blur-lg)) saturate(150%);
+  border: 1px solid var(--glass-border);
+}
+
+.profile-floating img {
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+/* ---------------------------------------------------------
+   6. Tombol — gaya kaca konsisten
+   --------------------------------------------------------- */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+  border: none !important;
+  box-shadow: 0 6px 20px rgba(66, 116, 217, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(66, 116, 217, 0.45);
+  }
+}
+
+.btn-social {
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  backdrop-filter: blur(var(--blur-sm));
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ---------------------------------------------------------
+   7. Modal Portfolio — panel kaca
+   --------------------------------------------------------- */
+.portfolio-modal .modal-content {
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  backdrop-filter: blur(var(--blur-lg));
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+}
+
+/* ---------------------------------------------------------
+   8. Footer & Copyright — kaca gelap menyatu dengan hero
+   --------------------------------------------------------- */
+.footer {
+  background: linear-gradient(160deg, var(--dark-navy-2), var(--dark-navy)) !important;
+}
+.copyright {
+  background: var(--dark-navy) !important;
+}
+
+/* ---------------------------------------------------------
+   9. Stabilisasi tambahan khusus mobile
+   --------------------------------------------------------- */
+@media (max-width: 575.98px) {
+  /* Kurangi intensitas blur di layar kecil/perangkat low-end
+     supaya scroll tetap mulus dan baterai lebih hemat */
+  #mainNav, #mainNav.navbar-shrink,
+  .portfolio .portfolio-item .portfolio-item-caption,
+  .about-card,
+  .portfolio-modal .modal-content {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  .masthead .masthead-heading {
+    word-break: break-word;
+  }
+
+  /* Cegah kartu portofolio melebihi lebar layar */
+  .portfolio-item, .portfolio-img-wrapper {
+    max-width: 100%;
+  }
+}
+
+/* Safe-area untuk perangkat dengan notch (iPhone dll.) */
+@supports (padding: max(0px)) {
+  #mainNav {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  .copyright {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}

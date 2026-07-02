@@ -49,14 +49,17 @@ window.addEventListener('DOMContentLoaded', event => {
         }
     }, { passive: true });
 
-    // Activate Bootstrap scrollspy on the main nav element
+    // Aktifkan Bootstrap ScrollSpy hanya jika nav memakai anchor (#id) —
+    // sekarang navigasi multi-halaman (index.html, tentang.html, dst),
+    // jadi ScrollSpy dilewati supaya tidak ada peringatan tak perlu di console.
     const mainNav = document.body.querySelector('#mainNav');
-    if (mainNav) {
+    const anchorNavLinks = document.querySelectorAll('#navbarResponsive .nav-link[href^="#"]');
+    if (mainNav && anchorNavLinks.length > 0) {
         new bootstrap.ScrollSpy(document.body, {
             target: '#mainNav',
             rootMargin: '0px 0px -40%',
         });
-    };
+    }
 
     // Collapse responsive navbar when toggler is visible
     const navbarToggler = document.body.querySelector('.navbar-toggler');
